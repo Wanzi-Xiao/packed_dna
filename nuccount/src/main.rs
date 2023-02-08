@@ -18,6 +18,7 @@
 // be sure to exit with informative error messages if the input is invalid
 
 use structopt::StructOpt;
+use dna::packed::PackedDna;
 
 /// Count the number of occurrences of each nucleotide in the provided DNA.
 #[derive(Debug, StructOpt)]
@@ -26,11 +27,30 @@ struct Opts {
     ///
     /// It is case insensitive but only nucleotides A, C, G and T are supported.
     #[structopt(short = "d", long, required = true)]
-    dna: String
+    dna: String,
 }
 
 fn main() {
     let opts = Opts::from_args();
     let dna = opts.dna;
     println!("Input: {}", &dna);
+    println!();
+
+    // IntelliJ IDEA
+    // Command: -- --dna ACGT
+    //             --dna ACSCGTA
+    let result = PackedDna::counter(&dna);
+    match result {
+        Ok(map) => {
+            for (nuc, count) in map.iter() {
+                println!("{:?}: {}", nuc, count)
+            }
+        }
+        Err(err) => {
+            // println!("{err:?}")
+            // ParseNucError('S')
+            println!("{}", err)
+            // failed to parse nucleotide from S
+        }
+    }
 }
