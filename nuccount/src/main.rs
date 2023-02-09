@@ -24,7 +24,6 @@ use dna::packed::PackedDna;
 #[derive(Debug, StructOpt)]
 struct Opts {
     /// The DNA sequence for which we should retrieve a nucleotide count.
-    ///
     /// It is case insensitive but only nucleotides A, C, G and T are supported.
     #[structopt(short = "d", long, required = true)]
     dna: String,
@@ -36,19 +35,19 @@ fn main() {
     println!("Input: {}", &dna);
     println!();
 
-    // IntelliJ IDEA
-    // Command: -- --dna ACGT
-    //             --dna ACSCGTA
     let result = PackedDna::counter(&dna);
+
     match result {
+        // --dna ACGT
         Ok(map) => {
             for (nuc, count) in map.iter() {
                 println!("{:?}: {}", nuc, count)
             }
         }
+        
+        // --dna ACSCGTA
         Err(err) => {
-            // println!("{err:?}")
-            // ParseNucError('S')
+            // exit with informative error messages if the input is invalid
             println!("{}", err)
             // failed to parse nucleotide from S
         }
